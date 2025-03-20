@@ -9,14 +9,14 @@ import logging
 from phonemizer.backend.espeak.wrapper import EspeakWrapper
 
 # Suppress Torch inductor errors and fall back to eager mode
-torch._dynamo.config.suppress_errors = True  # Added to avoid cl.exe dependency
+torch._dynamo.config.suppress_errors = True
 
 # Set up logging for debugging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Adjust path to import Zonos from your cloned repo
-ZONOS_PATH = Path(r"C:\Harsha\Work\perigo\try5\Zonos")
+ZONOS_PATH = Path("/home/user/perigo/Zonos")  # Update with the actual path
 if ZONOS_PATH.exists():
     sys.path.append(str(ZONOS_PATH))
 else:
@@ -28,8 +28,8 @@ from zonos.conditioning import make_cond_dict
 from zonos.utils import DEFAULT_DEVICE as device
 
 # Set eSpeak environment variable and configure EspeakWrapper
-ESPEAK_PATH = r"C:\Program Files\eSpeak NG\espeak-ng.exe"
-ESPEAK_LIB = r"C:\Program Files\eSpeak NG\libespeak-ng.dll"
+ESPEAK_PATH = "/usr/bin/espeak-ng"
+ESPEAK_LIB = "/usr/lib/x86_64-linux-gnu/libespeak-ng.so"
 if os.path.exists(ESPEAK_PATH):
     os.environ["PHONEMIZER_ESPEAK_PATH"] = ESPEAK_PATH
     if os.path.exists(ESPEAK_LIB):
@@ -37,7 +37,7 @@ if os.path.exists(ESPEAK_PATH):
     else:
         st.warning(f"eSpeak-NG library not found at {ESPEAK_LIB}. Falling back to default.")
 else:
-    st.error(f"eSpeak-NG executable not found at {ESPEAK_PATH}. Please install it or update the path.")
+    st.error(f"eSpeak-NG executable not found at {ESPEAK_PATH}. Please install it.")
     st.stop()
 
 # Load model from local repo with manual progress feedback
@@ -142,7 +142,6 @@ if st.button("Generate Speech", disabled=not (text.strip() and uploaded_file)):
                     file_name="generated_speech.wav",
                     mime="audio/wav",
                 )
-
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
         logger.error(f"Synthesis error: {e}", exc_info=True)
