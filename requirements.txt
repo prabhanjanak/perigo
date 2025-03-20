@@ -1,0 +1,7 @@
+streamlit==1.18.0
+deepgram-sdk==1.0.1
+httpx==0.24.0
+torch==2.1.0
+torchaudio==2.1.0
+phonemizer==1.0.0
+zonos==0.1.0
